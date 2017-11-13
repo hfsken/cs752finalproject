@@ -9,3 +9,6 @@ bestoffset: dpc2_bestoffset.c
 	$(CC) -o $@ $< $(DEP) $(CFLAGS)
 lookahead: dpc2_lookahead.cpp
 	$(CXX) -o $@ $< $(DEP) $(CFLAGS)
+
+clean:
+	rm -f bestoffset lookahead
