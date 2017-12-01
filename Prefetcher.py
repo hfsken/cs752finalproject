@@ -106,4 +106,4 @@ class LookaheadPrefetcher(QueuedPrefetcher):
     type = 'LookaheadPrefetcher'
     cxx_class = 'LookaheadPrefetcher'
     cxx_header = "mem/cache/prefetch/lookahead_dpc.hh"
-    degree = Param.Int(4, "Number of prefetches to generate")
+#    degree = Param.Int(4, "Number of prefetches to generate")

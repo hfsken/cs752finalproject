@@ -54,7 +54,6 @@
 #include "params/LookaheadPrefetcher.hh"
 
 
-
 // Signature table configuration
 #define ST_SET 512
 #define ST_WAY 2
@@ -73,32 +72,18 @@
 
 class LookaheadPrefetcher : public QueuedPrefetcher
 {
-    #if 0
-    class SPP_class;
 
-    SPP_class ST[ST_SET];          // Signature table
-    SPP_class PT[PT_SET];          // Pattern table
-    SPP_class FILTER[FILTER_SET];  // Filter
 
-// Statistics
-    int ST_access=0, ST_hit=0, ST_miss=0;
-    int PT_access=0, PT_hit=0, PT_miss=0;
-    int PF_attempt=0, PF_local=0, PF_beyond=0, PF_filtered=0;
-    int PF_issue=0, PF_inflight=0, PF_fail=0;
-    int PF_L2_attempt=0, PF_L2_issue=0, PF_L2_fail=0;
-    int PF_LLC_attempt=0,PF_LLC_issue=0, PF_LLC_fail=0;
-    int AUX_attempt=0, AUX_local=0, AUX_beyond=0, AUX_filtered=0;
-    int AUX_issue=0, AUX_inflight=0, AUX_fail=0;
-    int AUX_L2_attempt=0, AUX_L2_issue=0, AUX_L2_fail=0;
-    int AUX_LLC_attempt=0, AUX_LLC_issue=0, AUX_LLC_fail=0;
-    int LA_attempt=0, LA_prefetch=0;
-    int LA_depth[PRINTF_TRACK];
-    int depth=0;
-    int l2_hit=0, l2_miss=0, l2_access=0;
-    int remain_mshr=0, remain_rq=0;
-#endif
-#if 0
+protected:
+    const unsigned lPageSize;
+
+    Addr pageTag(Addr a) const;
+
     class SPP_class {
+    private:
+        const std::string name() {return _name; }
+        std::string _name;
+    public:
         ////////////////////////////////// Components
         // Common
         bool valid[MAX_ENTRY];
@@ -122,46 +107,84 @@ class LookaheadPrefetcher : public QueuedPrefetcher
         int new_delta;
         int pf_candidate, la_candidate;
 
+        void setName(std::string name){_name = name;}
+
+        LookaheadPrefetcher* owner;
+
+
         /////////////////////////////////// Functions
         // Common
         SPP_class();
-        void update_lru(int match_idx, bool invalid, int type);
 
+        void update_lru(int match_idx, bool invalid, int type);
         // ST stage
         int  access_ST(int tag, int curr_block, int type);
         int  update_signature(int assoc, int type);
 
         // PT stage
         void update_PT(int tag);
-        int  read_PT(int conf, int la_depth);
-        void update_counter(int match_idx, bool miss);
 
+        int  read_PT(int conf, int la_depth);
+
+        void update_counter(int match_idx, bool miss);
+#if 0
         // PE stage
         bool check_filter(int tag, int block, int type);
-    }
 #endif
+    };
+
+    SPP_class ST[ST_SET];          // Signature table
+    SPP_class PT[PT_SET];          // Pattern table
+//    SPP_class FILTER[FILTER_SET];  // Filter
+
+// Statistics
+
+
+    int PF_attempt, PF_local, PF_beyond;//, PF_filtered;
+#if 0
+    int PF_issue=0, PF_inflight=0, PF_fail=0;
+    int PF_L2_attempt=0, PF_L2_issue=0, PF_L2_fail=0;
+    int PF_LLC_attempt=0,PF_LLC_issue=0, PF_LLC_fail=0;
+    int AUX_attempt=0, AUX_local=0, AUX_beyond=0, AUX_filtered=0;
+    int AUX_issue=0, AUX_inflight=0, AUX_fail=0;
+    int AUX_L2_attempt=0, AUX_L2_issue=0, AUX_L2_fail=0;
+    int AUX_LLC_attempt=0, AUX_LLC_issue=0, AUX_LLC_fail=0;
+
+#endif
+    int LA_attempt, LA_prefetch;
+    int LA_depth[PRINTF_TRACK];
+    int PT_access, PT_hit, PT_miss;
+    int ST_access, ST_hit, ST_miss;
+    int l2_hit, l2_miss, l2_access;
+
+    int depth;
+#if 0
+    int remain_mshr=0, remain_rq=0;
+#endif
+
+
+
 public:
     LookaheadPrefetcher(const LookaheadPrefetcherParams *p);
     void calculatePrefetch(const PacketPtr &pkt,
                            std::vector<AddrPriority> &addresses);
-
-
-
-
-#if 0
 protected:
+    void l2_prefetcher_operate(Addr addr, Addr ip, int cache_hit,std::vector<AddrPriority> &addresses);
+    void l2_prefetcher_initialize();
+
+
     // Prefetch function
-    void attempt_prefetch(Addr base_addr, int base_block, int PT_idx, int la_candidate, int pf_candidate);
+    void attempt_prefetch(Addr base_addr, int base_block, int PT_idx, int la_candidate, int pf_candidate, std::vector<AddrPriority> &addresses);
 
 // Lookahead function
-    void lookahead(Addr base_addr, int base_block, int prev_conf, int PT_idx, int la_candidate);
-
+    void lookahead(Addr base_addr, int base_block, int prev_conf, int PT_idx, int la_candidate, std::vector<AddrPriority> &addresses);
+#if 0
 // Auxiliary next line prefetcher
     void aux_prefetch(Addr base_addr);
 
-    void l2_prefetcher_operate(int cpu_num, unsigned long long int addr, unsigned long long int ip, int cache_hit);
 
-    void l2_prefetcher_initialize(int cpu_num);
+
+
 #endif
 };
 
