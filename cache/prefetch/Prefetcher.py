@@ -102,11 +102,11 @@ class StreamPrefetcher(QueuedPrefetcher):
     use_master_id = Param.Bool(True, "Use master id based history")
     degree = Param.Int(4, "Number of prefetches to generate")
 
-class LookaheadPrefetcher(QueuedPrefetcher):
-    type = 'LookaheadPrefetcher'
-    cxx_class = 'LookaheadPrefetcher'
-    cxx_header = "mem/cache/prefetch/lookahead_dpc.hh"
-#    degree = Param.Int(4, "Number of prefetches to generate")
+# class LookaheadPrefetcher(QueuedPrefetcher):
+#     type = 'LookaheadPrefetcher'
+#     cxx_class = 'LookaheadPrefetcher'
+#     cxx_header = "mem/cache/prefetch/lookahead_dpc.hh"
+# #    degree = Param.Int(4, "Number of prefetches to generate")
 
 class DPCPrefetcher(QueuedPrefetcher):
     type = 'DPCPrefetcher'
@@ -118,3 +118,9 @@ class BestOffsetPrefetcher(DPCPrefetcher):
     type = 'BestOffsetPrefetcher'
     cxx_class = 'BestOffsetPrefetcher'
     cxx_header = "mem/cache/prefetch/best_offset.hh"
+
+class LookaheadPrefetcher(DPCPrefetcher):
+    type = 'LookaheadPrefetcher'
+    cxx_class = 'LookaheadPrefetcher'
+    cxx_header = "mem/cache/prefetch/lookahead.hh"
+# #    degree = Param.Int(4, "Number of prefetches to generate")
