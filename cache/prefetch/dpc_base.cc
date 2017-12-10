@@ -47,6 +47,10 @@ void DPCPrefetcher::setCache(BaseCache *_cache)
 
 void DPCPrefetcher::calculatePrefetch(const PacketPtr &pkt, std::vector<AddrPriority> &addresses)
 {
+    if (!pkt->req->hasPC()) {
+        DPRINTF(HWPrefetch, "Ignoring request with no PC.\n");
+        return;
+    }
     int cpu_num = 0; //    uint32_t core_id = pkt->req->hasContextId() ? pkt->req->contextId() : -1;           ?
     Addr pkt_addr = pkt->getAddr();
     bool is_secure = pkt->isSecure();
