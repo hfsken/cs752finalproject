@@ -124,3 +124,8 @@ class LookaheadPrefetcher(DPCPrefetcher):
     cxx_class = 'LookaheadPrefetcher'
     cxx_header = "mem/cache/prefetch/lookahead.hh"
 # #    degree = Param.Int(4, "Number of prefetches to generate")
+
+class Stride_DPCPrefetcher(DPCPrefetcher):
+    type = 'Stride_DPCPrefetcher'
+    cxx_class = 'Stride_DPCPrefetcher'
+    cxx_header = "mem/cache/prefetch/dpc_stride.hh"
