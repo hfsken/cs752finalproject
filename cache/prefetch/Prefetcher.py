@@ -129,3 +129,8 @@ class Stride_DPCPrefetcher(DPCPrefetcher):
     type = 'Stride_DPCPrefetcher'
     cxx_class = 'Stride_DPCPrefetcher'
     cxx_header = "mem/cache/prefetch/dpc_stride.hh"
+
+class MPM_DPCPrefetcher(DPCPrefetcher):
+    type = 'MPM_DPCPrefetcher'
+    cxx_class = 'MPM_DPCPrefetcher'
+    cxx_header = "mem/cache/prefetch/dpc_mpm.hh"
